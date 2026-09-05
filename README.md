@@ -12,6 +12,28 @@ e dá a cada aluno uma máquina Linux com root só dela.
 
 ---
 
+## Documentação das Entregas
+
+### Entrega 1 — Dois segmentos e um serviço
+
+#### Plano de Endereçamento
+
+| Segmento | Sub-rede | Máscara | Endereços Utilizáveis | Endereços Atribuídos |
+| :--- | :--- | :--- | :--- | :--- |
+| **Segmento A** | `10.0.10.0/24` | `255.255.255.0` | 254 (`10.0.10.1` a `10.0.10.254`) | `host-a1`: `10.0.10.10`<br>`host-a2`: `10.0.10.11`<br>`srv-a`: `10.0.10.20` |
+| **Segmento B** | `10.0.20.0/24` | `255.255.255.0` | 254 (`10.0.20.1` a `10.0.20.254`) | `host-b1`: `10.0.20.10`<br>`host-b2`: `10.0.20.11` |
+
+* **Cálculo de endereços por sub-rede:**
+  Com a máscara `/24`, os primeiros 24 bits identificam a rede e sobram 8 bits para endereçar os hosts ($32 - 24 = 8$). O total de endereços IP possíveis em cada sub-rede é $2^8 = 256$. Subtraindo o endereço de rede (`.0`) e o endereço de broadcast (`.255`), restam **254 endereços IPv4 utilizáveis** para atribuição às máquinas.
+
+#### Por que o Segmento A não alcança o Segmento B?
+
+Os contêineres do segmento A estão isolados em seu próprio domínio de broadcast L2 (bridge `seg-a`) com o barramento `10.0.10.0/24`. No momento da criação, a rota padrão dessas máquinas é removida (`ip route del default`). 
+
+Quando um host do segmento A tenta enviar pacotes para o segmento B (endereço `10.0.20.x`), a pilha de rede do Linux consulta a tabela de roteamento local. Como não há rota cadastrada para a sub-rede `10.0.20.0/24` nem um gateway padrão configurado, a tentativa de envio é interrompida imediatamente no próprio host com o erro local `Network is unreachable`, sem emitir pacotes para a rede externa.
+
+---
+
 ## Começando
 
 Construa a imagem do laboratório — uma vez por sessão do Cloud Shell:
