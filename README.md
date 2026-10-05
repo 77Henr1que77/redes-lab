@@ -135,3 +135,18 @@ git clone <repo-do-grupo> && cd <repo> && make up E=2 && make verificar E=2
 
 Os roteiros imprimem o valor observado em cada ponto, não só passou/falhou —
 dá para corrigir lendo a saída.
+
+## Entrega 2 — Roteador e encapsulamento
+
+Na Entrega 2, o roteador permite a comunicação entre os segmentos
+10.0.10.0/24 e 10.0.20.0/24. Quando um pacote atravessa o roteador,
+o endereço IP de origem e destino é mantido, pois ele identifica a
+comunicação entre os hosts nas diferentes redes. Porém, o endereço MAC
+é alterado a cada salto, porque o quadro Ethernet é encerrado ao chegar
+ao roteador e um novo quadro é criado para a próxima interface. Assim,
+o pacote IP continua sendo o mesmo, mas o encapsulamento Ethernet é
+recriado, utilizando um novo endereço MAC de origem e o MAC do próximo
+destino. Isso pode ser observado nas capturas perna-a.pcap e
+perna-b.pcap, nas quais o IP de origem permanece 10.0.10.10 enquanto o
+MAC de origem muda entre as duas pernas do roteador.
+
