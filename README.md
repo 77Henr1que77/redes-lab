@@ -150,3 +150,7 @@ destino. Isso pode ser observado nas capturas perna-a.pcap e
 perna-b.pcap, nas quais o IP de origem permanece 10.0.10.10 enquanto o
 MAC de origem muda entre as duas pernas do roteador.
 
+
+## Entrega 3 — O serviço não pode cair
+
+O cliente não consegue distinguir com certeza uma réplica morta de uma réplica particionada. Nos dois casos, ela pode deixar de responder às requisições dentro do tempo limite. Isso não impede o funcionamento do cliente, pois ele tenta as outras réplicas e retorna `INDISPONIVEL` quando nenhuma está acessível. Entretanto, essa limitação é importante em sistemas distribuídos, porque uma réplica pode continuar funcionando mesmo sem conseguir se comunicar com o cliente. Por isso, o cliente precisa respeitar o limite de tempo e não considerar uma réplica disponível sem receber uma resposta válida.
