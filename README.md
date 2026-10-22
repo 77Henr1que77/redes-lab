@@ -154,3 +154,15 @@ MAC de origem muda entre as duas pernas do roteador.
 ## Entrega 3 — O serviço não pode cair
 
 O cliente não consegue distinguir com certeza uma réplica morta de uma réplica particionada. Nos dois casos, ela pode deixar de responder às requisições dentro do tempo limite. Isso não impede o funcionamento do cliente, pois ele tenta as outras réplicas e retorna `INDISPONIVEL` quando nenhuma está acessível. Entretanto, essa limitação é importante em sistemas distribuídos, porque uma réplica pode continuar funcionando mesmo sem conseguir se comunicar com o cliente. Por isso, o cliente precisa respeitar o limite de tempo e não considerar uma réplica disponível sem receber uma resposta válida.
+## Entrega 3 — Morte de réplica e partição de rede
+
+O cliente não consegue distinguir completamente uma réplica que morreu de uma réplica que continua funcionando, mas está incomunicável devido a uma partição de rede. Nos dois casos, ele pode deixar de receber uma resposta dentro do tempo limite. Isso é um problema porque não é possível saber com certeza se a réplica parou ou se apenas perdeu a comunicação. Por isso, o cliente deve utilizar um tempo limite adequado, tentar as outras réplicas disponíveis e retornar `INDISPONIVEL` quando nenhuma responder, sem ficar esperando indefinidamente.
+
+
+## Entrega 4 — A rota se refaz sozinha
+
+Na verificação da Entrega 4, a rede levou 32 segundos para convergir após a queda do trânsito 1. Antes da falha, o próximo salto era 10.0.30.12, pelo caminho curto via r2. Após a falha, o próximo salto mudou para 10.0.40.13, utilizando o desvio via r3. Quando o trânsito 1 foi restaurado, a rota curta voltou a ser utilizada.
+
+Em uma rede com 50 roteadores, o tempo de convergência pode ser maior, pois as informações de roteamento precisam se propagar entre mais equipamentos. No RIP, que utiliza vetor de distância, as atualizações são trocadas entre vizinhos e dependem de métricas em saltos e temporizadores. Isso pode tornar a recuperação lenta em redes maiores, além de aumentar o risco de problemas como contagem até o infinito.
+
+
